@@ -12,7 +12,15 @@ public class StudentService {
     StudentRepository repo;
 
     public Student saveStudent(Student s){
-
+        Student existingStudent = repo.findByEmail(s.getEmail());
+        if (existingStudent != null) {
+            // If email exists, update the existing record instead of crashing (great for testing)
+            existingStudent.setName(s.getName());
+            existingStudent.setPassword(s.getPassword());
+            existingStudent.setEducation(s.getEducation());
+            return repo.save(existingStudent);
+        }
+        
         return repo.save(s);
     }
 }

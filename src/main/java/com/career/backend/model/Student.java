@@ -3,6 +3,9 @@ package com.career.backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+// Added import
+import jakarta.persistence.Transient;
+
 @Entity
 public class Student {
 
@@ -18,6 +21,10 @@ public class Student {
     // NEW FIELD (for MySQL login tracking)
     @Column(name="login_time")
     private LocalDateTime loginTime;
+
+    // OTP field (not stored in DB)
+    @Transient
+    private String otp;
 
     public Student(){}
 
@@ -39,7 +46,6 @@ public class Student {
 
     public void setEducation(String education){ this.education = education; }
 
-
     // NEW getter setter
     public LocalDateTime getLoginTime() {
         return loginTime;
@@ -47,5 +53,14 @@ public class Student {
 
     public void setLoginTime(LocalDateTime loginTime) {
         this.loginTime = loginTime;
+    }
+
+    // OTP getter setter
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }
