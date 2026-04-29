@@ -2,6 +2,7 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
+ARG CACHEBUST=1
 COPY . .
 
 RUN chmod +x mvnw
