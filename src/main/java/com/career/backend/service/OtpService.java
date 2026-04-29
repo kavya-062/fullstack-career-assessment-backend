@@ -31,12 +31,12 @@ public class OtpService {
 
     public void generateAndSendOtp(String email) {
         if (email != null) email = email.trim();
-        
+
         // 1. Generate 6 digit OTP
         String otp = String.format("%06d", new Random().nextInt(999999));
 
         // 2. Save it in memory with 1 minute expiry
-        long expiryTime = System.currentTimeMillis() + (60 * 1000); // 1 minute from now
+        long expiryTime = System.currentTimeMillis() + (60 * 1000); // 1 minute
         otpStorage.put(email, new OtpDetails(otp, expiryTime));
 
         // 3. Send Email
@@ -45,12 +45,17 @@ public class OtpService {
             message.setTo(email);
             message.setSubject("Your Career Assessment Registration OTP");
             message.setText("Your OTP for registration is: " + otp + "\n\nThis code is valid for 1 minute.");
+
             mailSender.send(message);
+
+            System.out.println("✅ OTP email sent successfully to: " + email);
+
         } catch (Exception e) {
-            System.out.println("Failed to send email to " + email);
+            System.out.println("❌ Failed to send email to " + email);
+            e.printStackTrace();   // 🔥 IMPORTANT FIX (shows real error)
         }
-        
-        // Print to console for easy local testing
+
+        // For debugging (you can remove later)
         System.out.println("TESTING ONLY - OTP generated for [" + email + "] is: " + otp);
     }
 
@@ -61,9 +66,9 @@ public class OtpService {
         System.out.println("Attempting to validate OTP for [" + email + "] with provided OTP: [" + otp + "]");
 
         OtpDetails details = otpStorage.get(email);
-        
+
         if (details == null) {
-            System.out.println("Validation failed: No OTP found in memory for this email. (Did the server restart?)");
+            System.out.println("Validation failed: No OTP found (maybe expired or server restarted)");
             return false;
         }
 
@@ -73,13 +78,13 @@ public class OtpService {
         }
 
         if (System.currentTimeMillis() > details.expiryTime) {
-            System.out.println("Validation failed: OTP expired. Time limit of 1 min exceeded.");
-            otpStorage.remove(email); // Clear expired OTP
+            System.out.println("Validation failed: OTP expired (1 minute passed)");
+            otpStorage.remove(email);
             return false;
         }
 
-        System.out.println("Validation successful for [" + email + "]");
-        otpStorage.remove(email); // Clear OTP after successful use
+        System.out.println("✅ OTP validation successful for [" + email + "]");
+        otpStorage.remove(email);
         return true;
     }
 }
