@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.career.backend.model.Student;
 import com.career.backend.service.StudentService;
-import com.career.backend.service.OtpService;
 
 import java.util.Map;
 
@@ -19,47 +18,16 @@ public class StudentController {
     @Autowired
     private StudentService service;
 
-    @Autowired
-    private OtpService otpService;
-
-    // 🔹 SEND OTP
-    @PostMapping("/request-otp")
-    public ResponseEntity<?> requestOtp(@RequestBody Map<String, String> request) {
-
-        String email = request.get("email");
-
-        System.out.println("📩 Incoming OTP request for: " + email);
-
-        // 🔥 Call OTP service (this should trigger mail sending logs)
-        otpService.generateAndSendOtp(email);
-
-        System.out.println("✅ OTP service method executed");
-
-        return ResponseEntity.ok(Map.of(
-                "message", "OTP sent to " + email
-        ));
-    }
-
-    // 🔹 SAVE STUDENT
+    // 🔹 SAVE STUDENT (NO OTP)
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Student s){
 
-        System.out.println("🔍 Verifying OTP for: " + s.getEmail());
-
-        // Validate OTP
-        boolean isValid = otpService.validateOtp(s.getEmail(), s.getOtp());
-
-        if(!isValid){
-            System.out.println("❌ OTP validation failed");
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Invalid OTP"));
-        }
+        System.out.println("📩 Saving student: " + s.getEmail());
 
         try {
-            System.out.println("✅ OTP verified, saving student");
-
             Student savedStudent = service.saveStudent(s);
+
+            System.out.println("✅ Student saved successfully");
 
             return ResponseEntity.ok(savedStudent);
 

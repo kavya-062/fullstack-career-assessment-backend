@@ -10,7 +10,7 @@ import com.career.backend.repository.StudentRepository;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*")   // ✅ ONLY CHANGE (fixed for deployment)
+@CrossOrigin(origins = "*")
 
 public class AuthController {
 
@@ -18,7 +18,7 @@ public class AuthController {
     private StudentRepository repo;
 
 
-    // OLD METHOD (keep)
+    // OLD METHOD (kept same)
     @PostMapping("/login")
     public String login(@RequestBody Student student){
 
@@ -26,9 +26,7 @@ public class AuthController {
 
         if(s != null && s.getPassword().equals(student.getPassword())){
 
-            // update login time every login
             s.setLoginTime(LocalDateTime.now());
-
             repo.save(s);
 
             return "Login Success";
@@ -38,23 +36,25 @@ public class AuthController {
     }
 
 
-    // IMPORTANT METHOD
+    // IMPORTANT METHOD (used by frontend)
     @PostMapping("/login-user")
     public Student loginUser(@RequestBody Student student){
+
+        System.out.println("🔐 Login attempt: " + student.getEmail());
 
         Student s = repo.findByEmail(student.getEmail());
 
         if(s != null && s.getPassword().equals(student.getPassword())){
 
-            // update login time every login
             s.setLoginTime(LocalDateTime.now());
-
             repo.save(s);
+
+            System.out.println("✅ Login success");
 
             return s;
         }
 
+        System.out.println("❌ Invalid credentials");
         return null;
     }
-
 }
