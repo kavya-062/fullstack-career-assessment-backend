@@ -26,17 +26,21 @@ public class OtpService {
         }
     }
 
-    // Temporary memory to store OTPs. Key = email, Value = OtpDetails
+    // Temporary memory to store OTPs
     private final Map<String, OtpDetails> otpStorage = new ConcurrentHashMap<>();
 
     public void generateAndSendOtp(String email) {
         if (email != null) email = email.trim();
 
+        // 🔥 DEBUG: Check Railway environment variables
+        System.out.println("MAIL USER = " + System.getenv("MAIL_USERNAME"));
+        System.out.println("MAIL PASS = " + System.getenv("MAIL_PASSWORD"));
+
         // 1. Generate 6 digit OTP
         String otp = String.format("%06d", new Random().nextInt(999999));
 
-        // 2. Save it in memory with 1 minute expiry
-        long expiryTime = System.currentTimeMillis() + (60 * 1000); // 1 minute
+        // 2. Save OTP with 1 minute expiry
+        long expiryTime = System.currentTimeMillis() + (60 * 1000);
         otpStorage.put(email, new OtpDetails(otp, expiryTime));
 
         // 3. Send Email
@@ -57,10 +61,10 @@ public class OtpService {
 
         } catch (Exception e) {
             System.out.println("❌ Failed to send email to " + email);
-            e.printStackTrace();   // 🔥 VERY IMPORTANT (shows real error)
+            e.printStackTrace();   // VERY IMPORTANT
         }
 
-        // Debug (remove later if needed)
+        // Debug fallback (in case email fails)
         System.out.println("TESTING ONLY - OTP generated for [" + email + "] is: " + otp);
     }
 
