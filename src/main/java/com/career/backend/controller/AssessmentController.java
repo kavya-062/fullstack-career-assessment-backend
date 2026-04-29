@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/assessment")
 
-@CrossOrigin
+@CrossOrigin(origins = "*")   // ✅ ONLY CHANGE
 
 public class AssessmentController {
 

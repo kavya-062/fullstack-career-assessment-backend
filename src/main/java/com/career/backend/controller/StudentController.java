@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
-@CrossOrigin
+@CrossOrigin(origins = "*") // ✅ FIXED (important for deployment)
 public class StudentController {
 
     @Autowired

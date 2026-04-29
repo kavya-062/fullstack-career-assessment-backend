@@ -10,7 +10,7 @@ import com.career.backend.repository.AssessmentResultRepository;
 
 @RestController
 @RequestMapping("/api/results")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")   // ✅ ONLY CHANGE
 
 public class ResultController {
 

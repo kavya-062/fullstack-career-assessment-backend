@@ -10,7 +10,7 @@ import com.career.backend.service.CareerService;
 
 @RestController
 @RequestMapping("/career")
-@CrossOrigin
+@CrossOrigin(origins = "*")   // ✅ ONLY CHANGE
 
 public class CareerController {
 

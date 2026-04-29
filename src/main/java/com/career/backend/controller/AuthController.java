@@ -10,7 +10,7 @@ import com.career.backend.repository.StudentRepository;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")   // ✅ ONLY CHANGE (fixed for deployment)
 
 public class AuthController {
 
